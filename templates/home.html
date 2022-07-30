@@ -1,0 +1,63 @@
+
+<!DOCTYPE html>
+
+
+<html>
+
+    <head>
+      
+        <title>Eden ♰</title>
+        <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+        <link rel="stylesheet" type="text/css" href="/static/sytles/stylehome.css" />
+        <div class="topnav">
+          <a class="active" href="/">Eden ♰</a>
+          <a href="create-post">Create a post</a>
+          <a href="contact">Contact</a>
+          <a href="rules">Rules</a>
+          <a href="users">Users</a>
+          <a href="aboutus">About us</a>
+          <a class="name" href="logout" style="float: right;color: black">Log out</a>
+          <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+        </div>
+    </head>
+
+
+
+    
+    <body>
+      <br>
+
+        {% for post in posts: %}
+        <div class="background" style="width: 50%">
+              <img class="photo" src="{{url_for('static', filename=post[2])}}" style="width: auto; height: 50px;float: left;">
+              <h6 class="post" style="float: right;margin-bottom:0;color: white;">{{(post[1])}}ㅤ</h6>
+              <br />
+              <br />
+              <br />
+              <br />
+              
+              <a href="{{ post[0] }}" class="post" style="margin : 0; padding-top:0;float: left;color: white;" >{{ post[0] }}</a>
+              <br>
+              
+              <h2 class="post" style="margin : 0; padding-top:0;color: white;">{{ post[3] }}</h2>
+              <h4 class="post" style="margin : 0; padding-top:0;color: white;">{{ post[4] }}</h4>
+              <br>
+              <br>
+              <br>
+              <input type="submit" value="Like" class="like" style="height: 20px;">
+              <br>
+        </div>
+        {% endfor%}
+
+
+        
+      
+    </div>
+
+
+    </body>
+
+
+
+
+</html>

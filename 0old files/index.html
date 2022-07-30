@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+
+
+<html>
+        <head>
+            <title>Home page</title>
+            {% if username != '': %}
+                <h1>Welcome back, {{username}}</h1>
+                <h5>logged in as {{username}} <br/> <br> <a href={{username}}>Account</a> <br> <a href="sign-out">Sign out</a></h5>
+            {% else: %}
+                <h1>Welcome</h1>
+                <a href="signin">Login</a>
+                <br>
+                <a href="create-account">Create an account</a>
+            {% endif %}
+            <br>
+            <br>
+            <br>
+        </head>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <body>
+            <h4>Feed</h4>
+            <br>
+            <a href="create-post">Create a post</a>
+            <br>
+            <br>
+            <br>
+            {% for line in feed_lines: %}
+                {% if ':' in line and 'content' not in line and 'date' not in line: %}
+                    <hr />
+                    <h3>{{ (line.split(':'))[0] }} </h3> <h5><a href="{{ (line.split(':'))[-1] }}">{{ (line.split(':'))[-1] }}</a> </h5>
+                {% elif 'date' in line: %}
+                    <h5>{{ line.split(':')[-1] }}</h5>
+                {% elif 'content' in line: %}
+                    <h4>{{ line.split(':')[-1] }}</h4>
+                    <hr />
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                    <br>
+                {% endif %}
+            {% endfor %}
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <h4>All users</h4>
+            {% for account in accounts: %}
+                <p><a href={{account}}>{{account}}</a></p>
+            {% endfor %}
+        </body>
+</html>

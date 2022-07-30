@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Eden ♰</title>
+    <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+    <link rel="stylesheet" type="text/css" href="/static/sytles/edit.css" />
+    <div class="topnav">
+        <a class="active" href="/">Eden ♰</a>
+        <a href="create-post">Create a post</a>
+        <a href="contact">Contact</a>
+        <a href="rules">Rules</a>
+        <a href="users">Users</a>
+        <a href="aboutus">About us</a>
+        <a class="name" href="logout" style="float: right;color: black">Log out</a>
+        {% if logged_as != False:%}
+            <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+        {% else: %}
+            <a  class="name" href="signin" style="float:right;color: black">Sign in</a>
+        {% endif %}
+      </div>
+
+    
+</head>
+
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form style="width: 50%" class="background" action="change_password" method="post">
+
+        <form class="backround" action="/editimage" method="post" enctype="multipart/form-data">
+            <h2>About us...</h2>
+            <h4>We are a team of two young possibly future developers that enjoy programming as a hobby, who decided to start a project for the first time together. We are going to keep on updating this website and see how far we can go. Any suggestions are welcomed.<br></h4> <h2>How we both contributed and how exactly did we create the website?</h2> <br> <h4>This website was created using Python and Flask combined with html and css. We contributed as you see below:</h4> <br>
+            <h4>- <a  class="devname" style="color: rgb(0, 0, 0);font-size: 15px;font-weight: bold" href="David">David</a> works as the FRONT-END developer/web designer .He contributed with everything regarding the FRONT-END of the website. So this wonderfully looking design that we have is thanks to him. He created everything that you can see with your eyes on the website and styled everything as well using and combining html and css.</h4> <br> 
+            <h4>- <a  class="devname" style="color: rgb(0, 0, 0);font-size: 15px;font-weight: bold" href="Patrick">Patrick</a> works as the BACK-END developer .He contributed with everything regarding the back-end of the website. He coded the logic behind the website which without no website can run, using Python and a module called Flask. </h4>
+            <br>
+            <br>
+
+
+</body>

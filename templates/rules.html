@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Eden ♰</title>
+    <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+    <link rel="stylesheet" type="text/css" href="/static/sytles/edit.css" />
+    <div class="topnav">
+        <a class="active" href="/">Eden ♰</a>
+        <a href="create-post">Create a post</a>
+        <a href="contact">Contact</a>
+        <a href="rules">Rules</a>
+        <a href="users">Users</a>
+        <a href="aboutus">About us</a>
+        <a class="name" href="logout" style="float: right;color: black">Log out</a>
+        {% if logged_as != False:%}
+            <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+        {% else: %}
+            <a  class="name" href="signin" style="float:right;color: black">Sign in</a>
+        {% endif %}
+      </div>
+
+    
+</head>
+
+<body>
+    <br>
+    <br>
+    <br>
+    <br>
+    <form style="width: 50%" class="background" action="change_password" method="post">
+
+        <form class="backround" action="/editimage" method="post" enctype="multipart/form-data">
+
+            <h2>Hello dear user, we want to let you know about some rules</h2>
+            <h4>Firstly, rules are important in any society but also on the Internet. Before we continue, I think you should keep in mind that the developers of the website and their friends that are on this website are Christians. So with that being said, disrespectful comments will punished with a ban and this doesn't only apply to comments against us but also people in general. I would like to ask everyone to NOT use curse words and swearing word. Bullying, defaimation, advertising another website or company without permission, spamming, innapropriate subjects, mean comments and everything in between, will be punished with a permanent ban on this website.<br> <h2>We want to make ourselves clear...</h2>  <h4>Everyone is allowed to join this website and chat with us regardless of nationality, beliefs, skin color, age, gender, etc. but we wanted to make sure that you understand a little bit of who we are and what we expect regarding to behaviour. Have a blessed day!<br> </h4>
+
+
+
+
+</body>

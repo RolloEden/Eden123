@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+        <title>Eden ♰</title>
+        <link rel="stylesheet" type="text/css" href="/static/sytles/account.css" />
+        <div class="topnav">
+            <a class="active" href="/">Eden ♰</a>
+            <a href="create-post">Create a post</a>
+            <a href="contact">Contact</a>
+            <a href="rules">Rules</a>
+            <a href="users">Users</a>
+            <a href="aboutus">About us</a>
+            <a class="name" href="logout" style="float: right;color: black">Log out</a>
+            <a class="name" href="edit" style="float: right;color: black">Edit</a>
+            {% if logged_as != False:%}
+                <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+            {% else: %}
+                <a  class="name" href="signin" style="float:right;color: black">Sign in</a>
+            {% endif %}
+          </div>
+
+
+    </head>
+  
+
+
+    <body>
+    <br>
+    <div class="background" style="width: 50%"> 
+        <br>
+        <img class="poza" src="{{url_for('static', filename=profile_picture)}}" style="width: auto; height: 100px;" >
+        <h1 style="margin-bottom:0;">{{acc}}</h1>
+        <br>
+        <hr class="hr">
+        <h4 style="margin-bottom:0;padding-top:0;">{{bio}}</h4>
+        <br>
+    </div>
+        {% for post in posts: %}
+            <div class="background1" style="width: 50%">
+                <h6 class="post" style="width: 100px;margin-bottom:0;color: white;">{{ (post[1]) }}</h6>
+                <h4 class="post" style="margin : 0; padding-top:0;width: 100px;color: white;" >{{ post[0] }}</h4>
+                <h2 class="post" style="margin : 0; padding-top:0;color: white;">{{ post[2] }}</h2>
+                <h4 class="post" style="margin : 0; padding-top:0;color: white;">{{ post[3] }}</h4>
+                <br>
+                <br>
+                <input type="submit" value="Like" class="like" style="height: 20px;">
+                <br>
+            </div>
+        {% endfor%}
+    </body>
+</html>

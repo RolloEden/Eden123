@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+
+
+<html>
+    <head>
+        <title>Eden ♰</title>
+        <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+        <link rel="stylesheet" type="text/css" href="/static/sytles/create-post.css" />
+        <div class="topnav">
+            <a class="active" href="/">Eden ♰</a>
+            <a href="create-post">Create a post</a>
+            <a href="/contact">Contact</a>
+            <a href="/rules">Rules</a>
+            <a href="/users">Users</a>
+            <a href="aboutus">About us</a>
+            <a class="name" href="logout" style="float: right;color: black">Log out</a>
+            <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+          </div>
+
+
+    </head>
+
+
+
+    <body class="post">
+        <form  action="checknewpost" method="post">
+            <p> <h2 style="color:white;">Title</h2> <input type="text" name="title" style="height: 17px;"> </p>
+            <p> <h2 style="color: white;">Content</h2> <input type="text" name="content" style="height: 17px;"> </p>
+            <br>
+            <input class="desing" type="submit" value="Post" id="post" style="height: 20px;width: 60px;">
+        </form>
+
+    </body>
+</html>

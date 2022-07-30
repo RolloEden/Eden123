@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+
+<head>
+    <title>Eden ♰</title>
+    <link rel="icon" type="image/x-icon" href="static/sytles/cross.jpg">
+    <link rel="stylesheet" type="text/css" href="/static/sytles/user.css" />
+    <div class="topnav">
+        <a class="active" href="/">Eden ♰</a>
+        <a href="create-post">Create a post</a>
+        <a href="contact">Contact</a>
+        <a href="rules">Rules</a>
+        <a href="users">Users</a>
+        <a href="aboutus">About us</a>
+        <a class="name" href="logout" style="float: right;color: black">Log out</a>
+        <a  class="name" href="{{logged_as}}" style="float:right;color: black">Logged as {{ logged_as }}</a>
+    </div>
+</head>
+
+<body>
+    <div class="background" style="width: 50%">
+        {% for user in users:%}
+            <br>
+            <a style="color: rgb(255, 255, 255);" class="user" href="{{(user.split(' '))[0]}}">{{(user.split(' '))[0]}}</a>
+            <br>
+            <br>
+        {% endfor %}
+
+    </div>
+    
+</body>
