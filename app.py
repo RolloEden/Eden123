@@ -32,15 +32,8 @@ for banned_ip in content:
 @app.route('/', methods=['GET'])
 def home():
     # checking ip
-    ip_addr = request.remote_addr
-    if ip_addr in banned_ips_list:
-        session['username'] = ''
-        return redirect('/')
-    else:
-        pass
     
-
-    if session['username'] != None:
+    if session['username'] != '':
         # loading feed
         all_posts = []
         os.chdir(main_directory)
@@ -126,32 +119,19 @@ def home():
 def create_post():
     try:
         # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            file = open('logged.txt', 'w')
-            file.write('')
-            file.close()
-            return redirect('/')
-        else:
-            pass
-        if session['username'] != None:
+        # ...
+        if session['username'] != '':
             return render_template('create-post.html', logged_as=session['username'])
         else:
             return redirect('/signin')
     except:
-        return redirect('/create-post')
+        return redirect('/')
 
 @app.route('/checknewpost', methods=['POST', 'GET'])
 def checknewpost():
-    try:
         # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        if session['username'] == None:
+        # ...
+        if session['username'] == '':
             return redirect('/signin')
         # redirecting user that arent logged in
 
@@ -181,6 +161,7 @@ def checknewpost():
         users_file_name = str((int(last_highest_number))) + users_name
 
 
+        os.chdir(main_directory)
         # changing directory
         os.chdir('POSTS')
         # creating the file
@@ -214,8 +195,6 @@ def checknewpost():
         file.close()
         print(str(new_date[:-1]))
         return redirect('/')
-    except:
-        return redirect('/checknewpost')
 
 
 
@@ -224,75 +203,48 @@ def checknewpost():
 
 @app.route('/signin')
 def signin():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            '''
-            file = open('logged.txt', 'w')
-            file.write('')
-            file.close()
-            '''
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        return render_template('signin.html', redirected=False)
-    except:
-        #for x in range(100):
-        return redirect('/signin')
+
+    # checking ip
+    # ...
+    return render_template('signin.html', redirected=False)
+
 
 @app.route('/checksignin', methods=['GET', 'POST'])
 def checksignin():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            '''
-            file = open('logged.txt', 'w')
-            file.write('')
-            file.close()
-            '''
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
+    # checking ip
+    # ...
 
+    os.chdir(main_directory)
+    list_of_users = ((open('list of users.txt', 'r')).read()).split('\n')
+    line_nr = 0
+    real_password = ''
+    print('USERNAME ' + request.form['username'])
+    print('PASSWORD ' + request.form['password'])
+    for line in list_of_users:
+        if request.form['username'] in line:
+            real_password = (line.split(' '))[-1]
+
+
+    if str(request.form['password']) == str(real_password):
+        # logged in successfully
+        #logged_file = open('logged.txt', 'w')
         os.chdir(main_directory)
-        list_of_users = ((open('list of users.txt', 'r')).read()).split('\n')
-        line_nr = 0
-        real_password = ''
-        print('USERNAME ' + request.form['username'])
-        print('PASSWORD ' + request.form['password'])
-        for line in list_of_users:
-            if request.form['username'] in line:
-                real_password = (line.split(' '))[-1]
-
-
-        if str(request.form['password']) == str(real_password):
-            # logged in successfully
-            #logged_file = open('logged.txt', 'w')
-            os.chdir(main_directory)
-            print('here')
-            #logged_file.write(str(request.form['username']) + '\n' + str(request.form['password']))
-            session['userdata'] = str(request.form['username']) + '\n' + str(request.form['password'])
-            session['username'] = str(request.form['username'])
-            #logged_file.close()
-            #return '<h2>LOGGED IN SUCCESFULLY</h2>'
-            print('here')
-            return redirect('/')
-        else:
-            #logged in unsuccessful
-            return redirect('/signin')
-    except:
-        return redirect('/checksignin')
+        print('here')
+        #logged_file.write(str(request.form['username']) + '\n' + str(request.form['password']))
+        session['userdata'] = str(request.form['username']) + '\n' + str(request.form['password'])
+        session['username'] = str(request.form['username'])
+        #logged_file.close()
+        #return '<h2>LOGGED IN SUCCESFULLY</h2>'
+        print('here')
+        return redirect('/')
+    else:
+        #logged in unsuccessful
+        return redirect('/signin')
 
 
 
 
         # SIGN UP
-
-
 @app.route('/signup')
 def signup():
     try:
@@ -307,43 +259,34 @@ def signup():
     except:
         return redirect('/signup')
 
+
 @app.route('/checksignup', methods=['GET', 'POST'])
 def checksignup():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        os.chdir(main_directory)
-        file = open('list of users.txt', 'r')
-        content = file.read()
+    os.chdir(main_directory)
+    file = open('list of users.txt', 'r')
+    content = file.read()
+    file.close()
+    if request.form['username'] not in content and str(request.form['password']) == str(request.form['password2']):
+        # adding the user on the "list of users" file
+        file = open('list of users.txt', 'a')
+        file.write('\n' + str(request.form['username']) + ' ' + str(request.form['password']))
         file.close()
-        if request.form['username'] not in content and str(request.form['password']) == str(request.form['password2']):
-            # adding the user on the "list of users" file
-            file = open('list of users.txt', 'a')
-            file.write('\n' + str(request.form['username']) + ' ' + str(request.form['password']))
-            file.close()
-            # creating a user's directory
-            os.chdir(main_directory)
-            os.chdir('Accounts')
-            os.mkdir(str(request.form['username']))
-            os.chdir(str(request.form['username']))
-            file = open('bio.txt', 'w')
-            file.write('')
-            file.close()
-            # create profile picture file (empty)
-            os.chdir(main_directory)
-            os.chdir('static')
-            destination = str(os.getcwd() + '\\' + request.form['username'] + '.png')
-            shutil.copyfile(os.getcwd() + '\\default.png', destination)
-            file.close()
-            return redirect('/')
-        else:
-            return redirect('/signup')
-    except:
+        # creating a user's directory
+        os.chdir(main_directory)
+        os.chdir('Accounts')
+        os.mkdir(str(request.form['username']))
+        os.chdir(str(request.form['username']))
+        file = open('bio.txt', 'w')
+        file.write('')
+        file.close()
+        # create profile picture file (empty)
+        os.chdir(main_directory)
+        os.chdir('static')
+        destination = str(os.getcwd() + '\\' + request.form['username'] + '.png')
+        shutil.copyfile(os.getcwd() + '\\default.png', destination)
+        file.close()
+        return redirect('/')
+    else:
         return redirect('/signup')
 
 
@@ -352,21 +295,10 @@ def checksignup():
 
 @app.route('/logout')
 def logout():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        if session['username'] == None:
-            return redirect('/signin')
-        session['username'] = ''
+    if session['username'] == '':
         return redirect('/signin')
-    except:
-        return logout('/signin')
-
+    session['username'] = ''
+    return redirect('/signin')
 
 
 
@@ -374,99 +306,91 @@ def logout():
 
 @app.route('/<account>')
 def Account(account):
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
+    if session['username'] == '':
+        return redirect('/signin')
+    # getting the bio
+    print('ACCOUNT ' + account)
+    os.chdir(main_directory)
+    os.chdir('Accounts')
+    os.chdir(account)
+    print(os.listdir())
+    file = open('bio.txt', 'r')
+    account_bio = file.read()
+    file.close()
+    # getting the profile picture
+    os.chdir(main_directory)
+    os.chdir('static')
+    all_files = os.listdir()
+    the_profile_picture = ''
+    for ext in ['.jpg', '.png', '.img']:
+        if (str(account) + str(ext)) in all_files:
+            the_profile_picture = (str(account) + str(ext))
         else:
             pass
-        # getting the bio
-        print('ACCOUNT ' + account)
-        os.chdir(main_directory)
-        os.chdir('Accounts')
-        os.chdir(account)
-        print(os.listdir())
-        file = open('bio.txt', 'r')
-        account_bio = file.read()
-        file.close()
-        # getting the profile picture
-        os.chdir(main_directory)
-        os.chdir('static')
-        all_files = os.listdir()
-        the_profile_picture = ''
-        for ext in ['.jpg', '.png', '.img']:
-            if (str(account) + str(ext)) in all_files:
-                the_profile_picture = (str(account) + str(ext))
-            else:
-                pass
-        # getting the posts posted by the user whos account is
+    # getting the posts posted by the user whos account is
+    os.chdir(main_directory)
+    os.chdir('POSTS')
+    all_file_names = os.listdir()
+    all_posts = []
+    # START
+    dir_ = os.getcwd()
+    for post_folder in all_file_names:
         os.chdir(main_directory)
         os.chdir('POSTS')
-        all_file_names = os.listdir()
-        all_posts = []
-    # START
-        dir_ = os.getcwd()
-        for post_folder in all_file_names:
+        # changing directories
+        os.chdir(str(post_folder))
+
+        # creating a sublist <=> to append it to the all_posts list
+        sub_list = []
+
+        # appending user's name to the sublist
+        users_name = ''
+        for ch in post_folder:
+            if not ch.isdigit():
+                users_name += ch
+
+        if users_name == account:
+            sub_list.append(users_name)
+
+            # appending the date
             os.chdir(main_directory)
             os.chdir('POSTS')
-            # changing directories
             os.chdir(str(post_folder))
+            file = open('date.txt', 'r')
+            new_date = file.read()
+            file.close()
+            sub_list.append(str(new_date))
 
-            # creating a sublist <=> to append it to the all_posts list
-            sub_list = []
+            # appending the title and description of the post to the sublist
+            os.chdir(main_directory)
+            os.chdir('POSTS')
+            os.chdir(str(post_folder))
+            file = open('postitself.txt', 'r')
+            content = file.read()
+            file.close()
+            content = content.split('\n')
+            for s in content:
+                sub_list.append(s)
 
-            # appending user's name to the sublist
-            users_name = ''
-            for ch in post_folder:
-                if not ch.isdigit():
-                    users_name += ch
+            # appending the comments from the post to the sublist
+            file = open('likes.txt', 'r')
+            content = file.read()
+            file.close()
+            content = content.split('\n')
+            sub_list.append(len(content))
 
-            if users_name == account:
-                sub_list.append(users_name)
-
-                # appending the date
-                os.chdir(main_directory)
-                os.chdir('POSTS')
-                os.chdir(str(post_folder))
-                file = open('date.txt', 'r')
-                new_date = file.read()
-                file.close()
-                sub_list.append(str(new_date))
-
-                # appending the title and description of the post to the sublist
-                os.chdir(main_directory)
-                os.chdir('POSTS')
-                os.chdir(str(post_folder))
-                file = open('postitself.txt', 'r')
-                content = file.read()
-                file.close()
-                content = content.split('\n')
-                for s in content:
-                    sub_list.append(s)
-
-                # appending the comments from the post to the sublist
-                file = open('likes.txt', 'r')
-                content = file.read()
-                file.close()
-                content = content.split('\n')
-                sub_list.append(len(content))
-
-                all_posts.append(sub_list)
-                os.chdir(dir_)
-            else:
-                pass
-
-        os.chdir(main_directory)
-        all_posts.reverse()
-    # FINISH
-        if session['username'] == str(account):
-            return render_template('account.html', acc=account, bio=account_bio, logged_as=session['username'], profile_picture=the_profile_picture, posts=all_posts, personal=True)
+            all_posts.append(sub_list)
+            os.chdir(dir_)
         else:
-            return render_template('account.html', acc=account, bio=account_bio, logged_as=session['username'], profile_picture=the_profile_picture, posts=all_posts,  personal=False)
-    except:
-        return redirect('/' + str(session['username']))
+            pass
+
+    os.chdir(main_directory)
+    all_posts.reverse()
+    # FINISH
+    if session['username'] == str(account):
+        return render_template('account.html', acc=account, bio=account_bio, logged_as=session['username'], profile_picture=the_profile_picture, posts=all_posts, personal=True)
+    else:
+        return render_template('account.html', acc=account, bio=account_bio, logged_as=session['username'], profile_picture=the_profile_picture, posts=all_posts,  personal=False)
 
 
 
@@ -477,153 +401,95 @@ def Account(account):
         # EDIT ACCOUNT
 @app.route('/edit', methods=['GET', 'POST'])
 def edit():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] == ''
-            return redirect('/')
-        else:
-            pass
-        if session['username'] == None:
-            return redirect('/signin')
-        return render_template('edit-account.html', logged_as=session['username'])
-    except:
-        return redirect('/edit')
+    if session['username'] == '':
+        return redirect('/signin')
+    return render_template('edit-account.html', logged_as=session['username'])
+
 
         # CONIFRM EDIT
 @app.route('/comfirm_edit_bio', methods=['GET', 'POST'])
 def confirm_edit_bio():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] == ''
-            return redirect('/')
-        else:
-            pass
-        usrname = str(session['username'])
-        os.chdir(main_directory)
-        os.chdir('Accounts')
-        os.chdir(usrname.capitalize())
-        
-        file = open('bio.txt', 'w')
-        file.write(request.form['new_bio'])
-        file.close()
-        return redirect(str('/' + str(session['username'])))
-    except:
-        return redirect('/comfirm_edit_bio')
+    usrname = str(session['username'])
+    os.chdir(main_directory)
+    os.chdir('Accounts')
+    os.chdir(usrname.capitalize())
+    
+    file = open('bio.txt', 'w')
+    file.write(request.form['new_bio'])
+    file.close()
+    return redirect(str('/' + str(session['username'])))
 
 
         # EDIT PROFILE IMAGE
 @app.route('/editimage', methods=['POST', 'GET'])
 def editimage():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        if request.method == 'POST':
-            f = request.files['file_name']
-            os.chdir(main_directory)
-            os.chdir('static')
-            print(os.listdir())
-            the_file = ''
-            for file in os.listdir():
-                if session['username'] in file:
-                    the_file = file
-            os.chdir(main_directory)
-            os.chdir('static')
-            os.remove(the_file)
-            f.save(the_file)
-            return redirect('/' + str(session['username']))
-        return render_template('edit-image.html', logged_as=session['username'])
-    except:
-        return redirect('/editimage')
+    if request.method == 'POST':
+        f = request.files['file_name']
+        os.chdir(main_directory)
+        os.chdir('static')
+        print(os.listdir())
+        the_file = ''
+        for file in os.listdir():
+            if session['username'] in file:
+                the_file = file
+        os.chdir(main_directory)
+        os.chdir('static')
+        os.remove(the_file)
+        f.save(the_file)
+        return redirect('/' + str(session['username']))
+    return render_template('edit-image.html', logged_as=session['username'])
 
 
         # CHANGE PASSWORD
 @app.route('/change-password', methods=['GET', 'POST'])
 def change_password():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        os.chdir(main_directory)
-        file = open('list of users.txt', 'r')
-        content = file.read()
+    # checking ip
+    # ...
+    os.chdir(main_directory)
+    file = open('list of users.txt', 'r')
+    content = file.read()
+    file.close()
+    if str(request.form['old_password']) in content and str(request.form['new_password']) == str(request.form['new_password2']):
+        done = False
+        users_new_line = ''
+        after_ = ''
+        before_ = ''
+        for line in content.split('\n'):
+            if str(session['username']) in line:
+                users_new_line = (line.split(' '))[0] + ' ' + str(request.form['new_password'])
+                done = True
+            elif done:
+                after_ += line + '\n'
+            elif str(session['username']) in line:
+                before_ += line + '\n'
+        file = open('list of users.txt', 'w')
+        file.write((before_ + '\n' + users_new_line + '\n' + after_).strip)
         file.close()
-        if str(request.form['old_password']) in content and str(request.form['new_password']) == str(request.form['new_password2']):
-            done = False
-            users_new_line = ''
-            after_ = ''
-            before_ = ''
-            for line in content.split('\n'):
-                if str(session['username']) in line:
-                    users_new_line = (line.split(' '))[0] + ' ' + str(request.form['new_password'])
-                    done = True
-                elif done:
-                    after_ += line + '\n'
-                elif str(session['username']) in line:
-                    before_ += line + '\n'
-            file = open('list of users.txt', 'w')
-            file.write((before_ + '\n' + users_new_line + '\n' + after_).strip)
-            file.close()
-            return redirect('/' + str(session['username']))
-        else:
-            return redirect('/edit')
-    except:
-        return redirect('/change-password')
+        return redirect('/' + str(session['username']))
+    else:
+        return redirect('/edit')
 
 
         # USERS
 @app.route('/users')
 def users():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        if session['username'] == None:
-            return redirect('/signin')
-        # all users list
-        all_users = []
-        file = open('list of users.txt', 'r')
-        content = file.read()
-        file.close()
-        for user in content.split('\n'):
-            all_users.append(user)
-        return render_template('users.html', users=all_users, logged_as=session['username'])
-    except:
-        return redirect('/users')
+    if session['username'] == '':
+        return redirect('/signin')
+    # all users list
+    all_users = []
+    file = open('list of users.txt', 'r')
+    content = file.read()
+    file.close()
+    for user in content.split('\n'):
+        all_users.append(user)
+    return render_template('users.html', users=all_users, logged_as=session['username'])
 
 
 
         # CONTACT
 @app.route('/contact')
 def contact():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        else:
-            pass
-        return render_template('contact.html', logged_as=session['username'])
-    except:
-        return redirect('/contact')
-
+    return render_template('contact.html', logged_as=session['username'])
 
 
         # RULES
@@ -637,31 +503,20 @@ def rules():
         # ABOUT US
 @app.route('/aboutus')
 def aboutus():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        if session['username'] == None:
-            return redirect('/signin')
-        return render_template('aboutus.html', logged_as=session['username'])
-    except:
-        return redirect('/aboutus')
+    if session['username'] == '':
+        return redirect('/signin')
+    return render_template('aboutus.html', logged_as=session['username'])
 
 
         # FORGOT PASSWORD
 @app.route('/forgot-password')
 def forgot_password():
-    try:
-        # checking ip
-        ip_addr = request.remote_addr
-        if ip_addr in banned_ips_list:
-            session['username'] = ''
-            return redirect('/')
-        return render_template('forgot_password.html')
-    except:
-        return redirect('/forgot-password')
+    # checking ip
+    ip_addr = request.remote_addr
+    if ip_addr in banned_ips_list:
+        session['username'] = ''
+        return redirect('/')
+    return render_template('forgot_password.html')
 
 
 
