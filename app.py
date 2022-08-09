@@ -25,13 +25,24 @@ for banned_ip in content:
 
 
 
+@app.route('/', methods=['GET', 'POST'])
+def index():
+    try:
+        session['username']
+        return redirect('/home')
+    except:
+        session['username'] = ''
+        return redirect('/signin')
 
 
 
-
-@app.route('/', methods=['GET'])
+@app.route('/home', methods=['GET'])
 def home():
     # checking ip
+    try:
+        session['username']
+    except:
+        return redirect('/')
     
     if session['username'] != '':
         # loading feed
@@ -40,6 +51,7 @@ def home():
         os.chdir('POSTS')
         dir_ = os.getcwd()
         post_folders = os.listdir()
+        print(post_folders)
         for post_folder in post_folders:
 
             # changing directories
@@ -125,7 +137,7 @@ def create_post():
         else:
             return redirect('/signin')
     except:
-        return redirect('/')
+        return redirect('/home')
 
 @app.route('/checknewpost', methods=['POST', 'GET'])
 def checknewpost():
@@ -183,18 +195,14 @@ def checknewpost():
         date = str((str(dt.date.today())).replace('-','.'))
         date = date.split('.')
         date.reverse()
-        print(date)
         new_date = ''
 
         for el in date: 
             new_date += el + '.'
-        print(new_date)
-
         file = open('date.txt', 'w')
         file.write(str(new_date[:-1]))
         file.close()
-        print(str(new_date[:-1]))
-        return redirect('/')
+        return redirect('/home')
 
 
 
@@ -218,8 +226,6 @@ def checksignin():
     list_of_users = ((open('list of users.txt', 'r')).read()).split('\n')
     line_nr = 0
     real_password = ''
-    print('USERNAME ' + request.form['username'])
-    print('PASSWORD ' + request.form['password'])
     for line in list_of_users:
         if request.form['username'] in line:
             real_password = (line.split(' '))[-1]
@@ -229,14 +235,12 @@ def checksignin():
         # logged in successfully
         #logged_file = open('logged.txt', 'w')
         os.chdir(main_directory)
-        print('here')
         #logged_file.write(str(request.form['username']) + '\n' + str(request.form['password']))
         session['userdata'] = str(request.form['username']) + '\n' + str(request.form['password'])
         session['username'] = str(request.form['username'])
         #logged_file.close()
         #return '<h2>LOGGED IN SUCCESFULLY</h2>'
-        print('here')
-        return redirect('/')
+        return redirect('/home')
     else:
         #logged in unsuccessful
         return redirect('/signin')
@@ -252,7 +256,7 @@ def signup():
         ip_addr = request.remote_addr
         if ip_addr in banned_ips_list:
             session['username'] = ''
-            return redirect('/')
+            return redirect('/home')
         else:
             pass
         return render_template('signup.html')
@@ -285,7 +289,7 @@ def checksignup():
         destination = str(os.getcwd() + '\\' + request.form['username'] + '.png')
         shutil.copyfile(os.getcwd() + '\\default.png', destination)
         file.close()
-        return redirect('/')
+        return redirect('/home')
     else:
         return redirect('/signup')
 
@@ -309,11 +313,9 @@ def Account(account):
     if session['username'] == '':
         return redirect('/signin')
     # getting the bio
-    print('ACCOUNT ' + account)
     os.chdir(main_directory)
     os.chdir('Accounts')
     os.chdir(account)
-    print(os.listdir())
     file = open('bio.txt', 'r')
     account_bio = file.read()
     file.close()
@@ -427,7 +429,6 @@ def editimage():
         f = request.files['file_name']
         os.chdir(main_directory)
         os.chdir('static')
-        print(os.listdir())
         the_file = ''
         for file in os.listdir():
             if session['username'] in file:
@@ -515,7 +516,7 @@ def forgot_password():
     ip_addr = request.remote_addr
     if ip_addr in banned_ips_list:
         session['username'] = ''
-        return redirect('/')
+        return redirect('/home')
     return render_template('forgot_password.html')
 
 
